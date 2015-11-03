@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BSD Dynamic Form</string>
+    <string name="app_name">BSD Dynamic Form Sample</string>
 
     <string name="action_settings">Settings</string>
 </resources>
