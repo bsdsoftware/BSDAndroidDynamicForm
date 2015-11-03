@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  <style name="AppSpinner" parent="Widget.AppCompat.Spinner">
+          <item name="android:background">?android:selectableItemBackground</item>
+          <item name="android:divider">@null</item>
+      </sty
+      <style name="AlertDialogCustom1" parent="Widget.AppCompat.ButtonBar.AlertDialog">
+          <item name="android:divider">@null</item>
+          <item name="divider">@null</item>
+
+      </style>
+
+      <style name="AlertDialogCustom" parent="Widget.AppCompat.ButtonBar.AlertDialog">
+          <item name="checkboxStyle">@style/CustomCheckBox</item>
+          <item name="buttonBarStyle">@style/MyButtonBar</item>
+      </style>
+
+      <style name="MyButtonBar">
+
+          <item name="divider">@null</item>
+          <item name="android:textColor">#F44336</item>
+
+      </style>
+
+      <style name="CustomCheckBox" parent="Base.Widget.AppCompat.CompoundButton.CheckBox">
+
+      </style>-->
+
+</resources>

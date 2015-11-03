@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Library</string>
+
+    <string name="submit_button">Submit</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="save_button">Save</string>
+</resources>
