@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
+import android.view.ContextThemeWrapper;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -48,7 +51,7 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
 
     @Override
     public boolean performClick() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MyAlertDialog);
         builder.setMultiChoiceItems(getMultiArray(), mSelection, this);
         _itemsAtStart = buildSelectedItems();
         builder.setPositiveButton(R.string.submit_button, new DialogInterface.OnClickListener() {
@@ -72,9 +75,26 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
         ListView listView = alertDialog.getListView();
         listView.setDivider(null);
         listView.setDividerHeight(-1);
-
         alertDialog.show();
+        /*WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = alertDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        window.setAttributes(lp);*/
+        //alertDialog.getWindow().setLayout((int) getResources().getDimension(R.dimen.width_alert), (int) getResources().getDimension(R.dimen.height_alert));
         return true;
+    }
+
+    @Override
+    public boolean performLongClick() {
+        return performClick();
+    }
+
+    @Override
+    public boolean performContextClick() {
+        return performClick();
     }
 
     private String[] getMultiArray(){

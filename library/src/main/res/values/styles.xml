@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--  <style name="AppSpinner" parent="Widget.AppCompat.Spinner">
-          <item name="android:background">?android:selectableItemBackground</item>
-          <item name="android:divider">@null</item>
-      </sty
-      <style name="AlertDialogCustom1" parent="Widget.AppCompat.ButtonBar.AlertDialog">
-          <item name="android:divider">@null</item>
-          <item name="divider">@null</item>
+    <!--<style name="MySpinner" parent="Widget.AppCompat.Spinner">
+        <!- -<item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:popupBackground">@null</item>
+    </style>-->
 
-      </style>
+    <style name="MyAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:buttonBarButtonStyle">@style/MyAlertDialog.Button</item>
+    </style>
 
-      <style name="AlertDialogCustom" parent="Widget.AppCompat.ButtonBar.AlertDialog">
-          <item name="checkboxStyle">@style/CustomCheckBox</item>
-          <item name="buttonBarStyle">@style/MyButtonBar</item>
-      </style>
+    <style name="MyAlertDialog.Button" parent="Base.Widget.AppCompat.Button">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">?attr/colorAccent</item>
+    </style>
 
-      <style name="MyButtonBar">
-
-          <item name="divider">@null</item>
-          <item name="android:textColor">#F44336</item>
-
-      </style>
-
-      <style name="CustomCheckBox" parent="Base.Widget.AppCompat.CompoundButton.CheckBox">
-
+    <!--  <style name="MySpinner" parent="Base.Widget.AppCompat.Spinner">
+          <item name="android:background">#4CAF50</item>
+          <item name="android:dividerHeight">-1dp</item>
       </style>-->
+
+    <style name="MySpinnerDivider">
+        <item name="android:dividerHeight">-1dp</item>
+    </style>
 
 </resources>

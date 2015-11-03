@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="matchparent">-1dp</dimen>
+    <dimen name="width_alert">300dp</dimen>
+    <dimen name="height_alert">450dp</dimen>
+</resources>
