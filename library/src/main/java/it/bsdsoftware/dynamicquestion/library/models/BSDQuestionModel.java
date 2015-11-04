@@ -1,5 +1,7 @@
 package it.bsdsoftware.dynamicquestion.library.models;
 
+import android.text.InputType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class BSDQuestionModel {
     private String resultText = "";
     private int resultChoice;
     private List<Integer> resultMultiChoices = new ArrayList<>();
+    private int inputType;
 
     private BSDQuestionModel(String question, int questionID) {
         this.question = question;
@@ -24,6 +27,16 @@ public class BSDQuestionModel {
     public BSDQuestionModel(String question, int questionID, QuestionType questionType){
         this(question, questionID);
         this.type = questionType;
+        if(questionType == QuestionType.MULTI_LINE_TEXT)
+            inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE;
+        else
+            inputType = InputType.TYPE_CLASS_TEXT;
+    }
+
+    public BSDQuestionModel(String question, int questionID, QuestionType questionType, int inputType){
+        this(question, questionID);
+        this.type = questionType;
+        this.inputType = inputType;
     }
 
     public BSDQuestionModel(String question, int questionID, QuestionType questionType, List<BSDChoiceModel> choices){
@@ -70,4 +83,9 @@ public class BSDQuestionModel {
     public void setResultMultiChoices(List<Integer> resultMultiChoices) {
         this.resultMultiChoices = resultMultiChoices;
     }
+
+    public int getInputType() {
+        return inputType;
+    }
+
 }

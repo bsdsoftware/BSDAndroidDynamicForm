@@ -2,6 +2,7 @@ package it.bsdsoftware.dynamicquestion.library;
 
 import android.app.Activity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,6 +129,7 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
                             model.setResultText(s.toString());
                         }
                     });
+                    viewHolder.text.setInputType(model.getInputType());
                     break;
                 case VIEW_TYPE_SINGLE_CHOICE:
                     if(viewHolder.spinner.getAdapter()==null) {

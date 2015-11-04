@@ -1,7 +1,9 @@
 package it.bsdsoftware.dynamicquestions.sample;
 
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import java.util.ArrayList;
@@ -29,28 +31,45 @@ public class MainActivity extends AppCompatActivity {
         bsdDynamicForm.setCallbackComplete(new CallbackComplete() {
             @Override
             public void doOnComplete(List<? extends BSDResponse> response) {
+                String result = "";
                 for(int i = 0; i < response.size(); i++){
                     if(response.get(i) instanceof SingleLineText){
                         SingleLineText res = (SingleLineText) response.get(i);
+                        result += String.format("question %s: %s\n", res.getQuestionID(), res.getResponseText());
                     }
                     if(response.get(i) instanceof MultiLineText){
                         MultiLineText res = (MultiLineText) response.get(i);
+                        result += String.format("question %s: %s\n", res.getQuestionID(), res.getResponseText());
                     }
                     if(response.get(i) instanceof SingleChoice){
                         SingleChoice res = (SingleChoice) response.get(i);
+                        result += String.format("question %s: %s\n", res.getQuestionID(), res.getChoice());
                     }
                     if(response.get(i) instanceof MultiChoice){
                         MultiChoice res = (MultiChoice) response.get(i);
+                        String choices = "";
+                        for(int k : res.getMultiChoices()){
+                            choices += k + ",";
+                        }
+                        choices = choices.substring(0, choices.length()-1);
+                        result += String.format("question %s: %s\n", res.getQuestionID(), choices);
                     }
                 }
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Results")
+                        .setMessage(result)
+                        .setPositiveButton("Close", null)
+                        .show();
             }
         });
 
         List<BSDQuestionModel> questions = new ArrayList<>();
 
-        BSDQuestionModel model = new BSDQuestionModel("Question 1 (Single line text)", 1, QuestionType.SINGLE_LINE_TEXT);
+        BSDQuestionModel model = new BSDQuestionModel("Question 1 (Single line email)", 1, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         questions.add(model);
-        model = new BSDQuestionModel("Question 2 (Single line text)", 2, QuestionType.SINGLE_LINE_TEXT);
+        model = new BSDQuestionModel("Question 2 (Single line password)", 2, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 10 (Single line number)", 10, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_NUMBER);
         questions.add(model);
         model = new BSDQuestionModel("Question 3 (Multi line text)", 3 , QuestionType.MULTI_LINE_TEXT);
         questions.add(model);
