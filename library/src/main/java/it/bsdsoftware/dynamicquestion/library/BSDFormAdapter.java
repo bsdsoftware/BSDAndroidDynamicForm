@@ -1,9 +1,12 @@
 package it.bsdsoftware.dynamicquestion.library;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import java.util.List;
 import it.bsdsoftware.dynamicquestion.library.models.BSDChoiceModel;
 import it.bsdsoftware.dynamicquestion.library.models.BSDQuestionModel;
 import it.bsdsoftware.dynamicquestion.library.models.CallbackComplete;
+import it.bsdsoftware.dynamicquestion.library.models.QuestionType;
 import it.bsdsoftware.dynamicquestion.library.models.response.BSDResponse;
 import it.bsdsoftware.dynamicquestion.library.models.response.MultiChoice;
 import it.bsdsoftware.dynamicquestion.library.models.response.MultiLineText;
@@ -34,6 +38,13 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
 
     private Activity context;
     private CallbackComplete callbackComplete;
+
+    private int styleSaveButton = -1;
+    private int styleTextSaveButton = -1;
+    private int styleTextQuestion = -1;
+    private int styleTextResponse = -1;
+    private int colorBackgroundSaveButton = Color.TRANSPARENT;
+    private Drawable backgroundSaveButton = null;
 
     public BSDFormAdapter(Activity context) {
         super(context, R.layout.single_line_text);
@@ -71,9 +82,10 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         int itemViewType = getItemViewType(position);
+        final BSDQuestionModel model = getItem(position);
 
-        ViewHolder viewHolder = null;
-        if(convertView == null) {
+        ViewHolder viewHolder;
+      //  if(convertView == null) {
             int layoutID;
             switch (itemViewType){
                 case VIEW_TYPE_SINGLE_LINE_TEXT:
@@ -96,82 +108,111 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
             convertView = inflater.inflate(layoutID, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
-        }
+       // }
 
-        if (viewHolder == null) {
+        /*if (viewHolder == null) {
             Object tag = convertView.getTag();
             if (tag instanceof ViewHolder) {
                 viewHolder = (ViewHolder) tag;
             }
+        }*/
+
+        if(viewHolder.question!=null) {
+            viewHolder.question.setText(model.getQuestion());
         }
 
-        final BSDQuestionModel model = getItem(position);
+        switch (itemViewType){
+            case VIEW_TYPE_SINGLE_LINE_TEXT:
+            case VIEW_TYPE_MULTI_LINE_TEXT:
+                if(viewHolder.textWatcher!=null)
+                    viewHolder.text.removeTextChangedListener(viewHolder.textWatcher);
+                viewHolder.text.setText(model.getResultText());
+                viewHolder.textWatcher = new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        if(viewHolder!=null) {
-            if(viewHolder.question!=null)
-                viewHolder.question.setText(model.getQuestion());
-            switch (itemViewType){
-                case VIEW_TYPE_SINGLE_LINE_TEXT:
-                case VIEW_TYPE_MULTI_LINE_TEXT:
-                    viewHolder.text.addTextChangedListener(new TextWatcher() {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        model.setResultText(s.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                };
+                viewHolder.text.addTextChangedListener(viewHolder.textWatcher);
+                viewHolder.text.setInputType(model.getInputType());
+                break;
+            case VIEW_TYPE_SINGLE_CHOICE:
+                BSDSpinnerAdapter adapter;
+                if(viewHolder.spinner.getAdapter()==null) {
+                    adapter = new BSDSpinnerAdapter(context);
+                    adapter.addAll(model.getChoices());
+                    viewHolder.spinner.setAdapter(adapter);
+                    viewHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            BSDChoiceModel bsdChoiceModel = (BSDChoiceModel) parent.getAdapter().getItem(position);
+                            model.setResultChoice(bsdChoiceModel.getValue());
                         }
-
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        public void onNothingSelected(AdapterView<?> parent) {
 
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            model.setResultText(s.toString());
                         }
                     });
-                    viewHolder.text.setInputType(model.getInputType());
-                    break;
-                case VIEW_TYPE_SINGLE_CHOICE:
-                    if(viewHolder.spinner.getAdapter()==null) {
-                        BSDSpinnerAdapter adapter = new BSDSpinnerAdapter(context);
-                        adapter.addAll(model.getChoices());
-                        viewHolder.spinner.setAdapter(adapter);
-                        viewHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                BSDChoiceModel bsdChoiceModel = (BSDChoiceModel) parent.getAdapter().getItem(position);
-                                model.setResultChoice(bsdChoiceModel.getValue());
-                            }
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });
+                }else{
+                    adapter = (BSDSpinnerAdapter) viewHolder.spinner.getAdapter();
+                }
+                viewHolder.spinner.setSelection(adapter.getIndexAtElement(model.getResultChoice()), false);
+                break;
+            case VIEW_TYPE_MULTI_CHOICE:
+                if(viewHolder.multiSpinner.isItemsVoid()) {
+                    viewHolder.multiSpinner.setOnChangeSelectedItem(new MultiChoiceSpinner.OnChangeSelectedItem() {
+                        @Override
+                        public void onChange(MultiChoiceModel multiChoiceModel) {
+                            model.setResultMultiChoices(multiChoiceModel.getValues());
+                        }
+                    });
+                    viewHolder.multiSpinner.setItems(model.getChoices());
+                }
+                break;
+            case VIEW_TYPE_END:
+                if(viewHolder.btn_container.findViewById(R.id.save_button)==null) {
+                    Button saveButton;
+                    if(styleSaveButton !=-1){
+                        saveButton = new Button(new ContextThemeWrapper(context, styleSaveButton));
+                    }else{
+                        saveButton = new Button(context);
                     }
-                    break;
-                case VIEW_TYPE_MULTI_CHOICE:
-                    if(viewHolder.multiSpinner.isItemsVoid()) {
-                        viewHolder.multiSpinner.setOnChangeSelectedItem(new MultiChoiceSpinner.OnChangeSelectedItem() {
-                            @Override
-                            public void onChange(MultiChoiceModel multiChoiceModel) {
-                                model.setResultMultiChoices(multiChoiceModel.getValues());
-                            }
-                        });
-                        viewHolder.multiSpinner.setItems(model.getChoices());
+                    if(styleTextSaveButton != -1){
+                        Utils.setTextAppearance(context, saveButton, styleTextSaveButton);
                     }
-                    break;
-                case VIEW_TYPE_END:
-                    viewHolder.save.setOnClickListener(new View.OnClickListener() {
+                    if(backgroundSaveButton!=null){
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                            saveButton.setBackground(backgroundSaveButton);
+                        else
+                            saveButton.setBackgroundDrawable(backgroundSaveButton);
+                    }else{
+                        saveButton.setBackgroundColor(colorBackgroundSaveButton);
+                    }
+                    saveButton.setId(R.id.save_button);
+                    saveButton.setText(R.string.save_button);
+                    saveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             List<BSDResponse> response = checkResponse();
-                            if(callbackComplete!=null)
+                            if (callbackComplete != null)
                                 callbackComplete.doOnComplete(response);
                         }
                     });
-                    break;
+                    viewHolder.btn_container.addView(saveButton);
+                }
+                break;
             }
-        }
+
         return convertView;
     }
 
@@ -208,18 +249,49 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
         public final EditText text;
         public final Spinner spinner;
         public final MultiChoiceSpinner multiSpinner;
-        public final Button save;
+        public final LinearLayout btn_container;
+        public TextWatcher textWatcher;
 
         public ViewHolder(View view){
             question = (TextView) view.findViewById(R.id.textview_question);
             text = (EditText) view.findViewById(R.id.edittext_text);
             spinner = (Spinner) view.findViewById(R.id.spinner_single_choice);
             multiSpinner = (MultiChoiceSpinner) view.findViewById(R.id.spinner_multi_choice);
-            save = (Button) view.findViewById(R.id.button_save);
+            btn_container = (LinearLayout) view.findViewById(R.id.ll);
+            if(question!= null && styleTextQuestion!=-1)
+                Utils.setTextAppearance(context, question, styleTextQuestion);
+            if(styleTextResponse!= -1){
+                if(text!=null)
+                    Utils.setTextAppearance(context, text, styleTextResponse);
+            }
         }
     }
 
     public void setCallbackComplete(CallbackComplete callbackComplete) {
         this.callbackComplete = callbackComplete;
+    }
+
+    public void setStyleSaveButton(int styleSaveButton) {
+        this.styleSaveButton = styleSaveButton;
+    }
+
+    public void setStyleTextSaveButton(int styleTextSaveButton) {
+        this.styleTextSaveButton = styleTextSaveButton;
+    }
+
+    public void setColorBackgroundSaveButton(int colorBackgroundSaveButton) {
+        this.colorBackgroundSaveButton = colorBackgroundSaveButton;
+    }
+
+    public void setBackgroundSaveButton(Drawable backgroundSaveButton) {
+        this.backgroundSaveButton = backgroundSaveButton;
+    }
+
+    public void setStyleTextQuestion(int styleTextQuestion) {
+        this.styleTextQuestion = styleTextQuestion;
+    }
+
+    public void setStyleTextResponse(int styleTextResponse) {
+        this.styleTextResponse = styleTextResponse;
     }
 }

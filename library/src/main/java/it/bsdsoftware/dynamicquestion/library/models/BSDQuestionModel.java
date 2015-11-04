@@ -1,7 +1,6 @@
 package it.bsdsoftware.dynamicquestion.library.models;
 
 import android.text.InputType;
-
 import java.util.ArrayList;
 import java.util.List;
 

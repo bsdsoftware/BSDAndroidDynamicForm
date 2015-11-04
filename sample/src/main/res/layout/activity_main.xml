@@ -1,17 +1,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!--<GridView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listView"
-        android:numColumns="1"
-        />-->
+    <!--
+        app:save_button_style="@style/MyButton"
+        -->
     <it.bsdsoftware.dynamicquestion.library.BSDDynamicForm
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/gridView"
+        app:save_button_style="@style/ButtonSaveStyle"
+        app:save_button_text_style="@style/ButtonSaveText"
+        app:save_button_backgrond_color="#4CAF50"
+        app:question_text_style="@style/QuestionText"
+        app:response_text_style="@style/ResponseText"
         android:numColumns="1"/>
 </RelativeLayout>

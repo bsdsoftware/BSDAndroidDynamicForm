@@ -1,7 +1,6 @@
 package it.bsdsoftware.dynamicquestion.library.models.response;
 
 import java.util.List;
-
 import it.bsdsoftware.dynamicquestion.library.models.QuestionType;
 
 /**

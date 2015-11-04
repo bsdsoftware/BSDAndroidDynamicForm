@@ -4,15 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import java.util.Arrays;
 import java.util.List;
-
 import it.bsdsoftware.dynamicquestion.library.models.BSDChoiceModel;
 
 /**
@@ -76,14 +72,6 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
         listView.setDivider(null);
         listView.setDividerHeight(-1);
         alertDialog.show();
-        /*WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        Window window = alertDialog.getWindow();
-        lp.copyFrom(window.getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        window.setAttributes(lp);*/
-        //alertDialog.getWindow().setLayout((int) getResources().getDimension(R.dimen.width_alert), (int) getResources().getDimension(R.dimen.height_alert));
         return true;
     }
 
@@ -103,6 +91,30 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
             array[i] = _items.get(i).getLabel();
         }
         return array;
+    }
+
+    public void selectItems(List<Integer> selection){
+        mSelection = new boolean[_items.size()];
+        for(int sel : selection){
+            for(int i = 0; i < _items.size(); i++){
+                if(sel == _items.get(i).getValue()){
+                    mSelection[i] = true;
+                    break;
+                }
+            }
+        }
+        boolean ok = false;
+        for(boolean b : mSelection){
+            if(b) {
+                ok = true;
+                break;
+            }
+        }
+        if(!ok){
+            mSelection[0] = true;
+        }
+        simple_adapter.clear();
+        simple_adapter.add(buildSelectedItems());
     }
 
 

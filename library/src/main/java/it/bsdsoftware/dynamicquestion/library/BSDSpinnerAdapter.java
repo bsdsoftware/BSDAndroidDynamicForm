@@ -48,4 +48,13 @@ class BSDSpinnerAdapter extends ArrayAdapter<BSDChoiceModel> {
 
         return convertView;
     }
+
+    public int getIndexAtElement(int value){
+        for(int i = 0; i < getCount(); i++){
+            if(getItem(i).getValue() == value){
+                return i;
+            }
+        }
+        return -1;
+    }
 }

@@ -26,4 +26,20 @@
         <item name="android:dividerHeight">-1dp</item>
     </style>
 
+   <!-- <style name="MyButton" parent="Widget.AppCompat.Button">
+        <item name="android:paddingLeft">50dp</item>
+        <item name="android:paddingRight">50dp</item>
+
+        <item name="android:background">#4CAF50</item>
+
+
+    </style>
+
+    <style name="MyText">
+        <item name="android:textColor">#D50000</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">italic|bold</item>
+    </style>-->
+
 </resources>

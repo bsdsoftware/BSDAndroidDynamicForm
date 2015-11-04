@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
                         result += String.format("question %s: %s\n", res.getQuestionID(), choices);
                     }
                 }
-                new AlertDialog.Builder(MainActivity.this)
+                new AlertDialog.Builder(MainActivity.this, it.bsdsoftware.dynamicquestion.library.R.style.MyAlertDialog)
                         .setTitle("Results")
                         .setMessage(result)
-                        .setPositiveButton("Close", null)
+                        .setNegativeButton("Close", null)
                         .show();
             }
         });
@@ -67,9 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         BSDQuestionModel model = new BSDQuestionModel("Question 1 (Single line email)", 1, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         questions.add(model);
-        model = new BSDQuestionModel("Question 2 (Single line password)", 2, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        questions.add(model);
-        model = new BSDQuestionModel("Question 10 (Single line number)", 10, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_NUMBER);
+        model = new BSDQuestionModel("Question 2 (Single line url)", 2, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
         questions.add(model);
         model = new BSDQuestionModel("Question 3 (Multi line text)", 3 , QuestionType.MULTI_LINE_TEXT);
         questions.add(model);
@@ -87,19 +85,36 @@ public class MainActivity extends AppCompatActivity {
 
         model = new BSDQuestionModel("Question 5 (Single choice)", 5, QuestionType.SINGLE_CHOICE, choiceModels);
         questions.add(model);
-
         model = new BSDQuestionModel("Question 6 (Single choice)", 6, QuestionType.SINGLE_CHOICE, choiceModels);
         questions.add(model);
-
         model = new BSDQuestionModel("Question 7 (Multi choice)", 7, QuestionType.MULTI_CHOICE, choiceModels);
         questions.add(model);
-
         model = new BSDQuestionModel("Question 8 (Multi choice)", 8, QuestionType.MULTI_CHOICE, choiceModels);
         questions.add(model);
-
         model = new BSDQuestionModel("Question 9 (Multi choice)", 9, QuestionType.MULTI_CHOICE, choiceModels);
         questions.add(model);
-
+        model = new BSDQuestionModel("Question 10 (Single line number)", 10, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_NUMBER);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 11 (Single line email)", 11, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 12 (Single line email)", 12, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 13 (Single line email)", 13, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 14 (Single choice)", 14, QuestionType.SINGLE_CHOICE, choiceModels);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 15 (Single choice)", 15, QuestionType.SINGLE_CHOICE, choiceModels);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 16 (Single choice)", 16, QuestionType.SINGLE_CHOICE, choiceModels);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 17 (Multi choice)", 17, QuestionType.MULTI_CHOICE, choiceModels);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 18 (Single line number)", 18, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_NUMBER);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 19 (Multi choice)", 19, QuestionType.MULTI_CHOICE, choiceModels);
+        questions.add(model);
+        model = new BSDQuestionModel("Question 20 (Single line number)", 20, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_NUMBER);
+        questions.add(model);
 
         bsdDynamicForm.setQuestions(questions);
     }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="BSDDynamicForm">
+        <attr name="save_button_style" format="reference" />
+        <attr name="save_button_text_style" format="reference" />
+        <attr name="save_button_backgrond_color" format="color" />
+        <attr name="save_button_background_resource" format="reference" />
+        <attr name="question_text_style" format="reference" />
+        <attr name="response_text_style" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="MultiChoiceSpinner">
+        <attr name="spinner_style" format="reference" />
+    </declare-styleable>
+
+
+</resources>
