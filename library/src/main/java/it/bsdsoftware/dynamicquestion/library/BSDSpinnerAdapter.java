@@ -14,6 +14,7 @@ import it.bsdsoftware.dynamicquestion.library.models.BSDChoiceModel;
  */
 class BSDSpinnerAdapter extends ArrayAdapter<BSDChoiceModel> {
 
+    private int styleText;
     private Activity context;
 
     public BSDSpinnerAdapter(Activity context) {
@@ -31,6 +32,9 @@ class BSDSpinnerAdapter extends ArrayAdapter<BSDChoiceModel> {
         BSDChoiceModel model = getItem(position);
         TextView spinnerText = (TextView) convertView.findViewById(android.R.id.text1);
         spinnerText.setText(model.getLabel());
+        if(styleText !=-1){
+            Utils.setTextAppearance(getContext(), spinnerText, styleText);
+        }
 
         return convertView;
     }
@@ -56,5 +60,9 @@ class BSDSpinnerAdapter extends ArrayAdapter<BSDChoiceModel> {
             }
         }
         return -1;
+    }
+
+    public void setStyleText(int styleText) {
+        this.styleText = styleText;
     }
 }

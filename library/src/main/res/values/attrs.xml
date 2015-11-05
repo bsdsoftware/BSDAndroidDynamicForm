@@ -10,9 +10,4 @@
         <attr name="response_text_style" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="MultiChoiceSpinner">
-        <attr name="spinner_style" format="reference" />
-    </declare-styleable>
-
-
 </resources>

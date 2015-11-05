@@ -16,6 +16,7 @@ import it.bsdsoftware.dynamicquestion.library.models.BSDChoiceModel;
  */
 class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoiceClickListener {
 
+    private int styleTextResponse = -1;
     private List<BSDChoiceModel> _items = null;
     private boolean[] mSelection = null;
     private boolean[] mSelectionAtStart = null;
@@ -27,12 +28,14 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
         super(context);
         simple_adapter = new MultiChoiceAdapter(context);
         super.setAdapter(simple_adapter);
+        simple_adapter.setStyleText(styleTextResponse);
     }
 
     public MultiChoiceSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
         simple_adapter = new MultiChoiceAdapter(context);
         super.setAdapter(simple_adapter);
+        simple_adapter.setStyleText(styleTextResponse);
     }
 
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -72,6 +75,7 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
         listView.setDivider(null);
         listView.setDividerHeight(-1);
         alertDialog.show();
+
         return true;
     }
 
@@ -87,18 +91,22 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
 
     private String[] getMultiArray(){
         String[] array = new String[_items.size()];
-        for(int i = 0; i < _items.size(); i++){
+        for(int i = 0; i < _items.size(); i++) {
             array[i] = _items.get(i).getLabel();
         }
         return array;
     }
 
-    public void selectItems(List<Integer> selection){
+    public void selectItems(List<Integer> selection) {
         mSelection = new boolean[_items.size()];
+        mSelectionAtStart = new boolean[_items.size()];
+        Arrays.fill(mSelection, false);
+        Arrays.fill(mSelectionAtStart, false);
         for(int sel : selection){
             for(int i = 0; i < _items.size(); i++){
                 if(sel == _items.get(i).getValue()){
                     mSelection[i] = true;
+                    mSelectionAtStart[i] = true;
                     break;
                 }
             }
@@ -112,9 +120,13 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
         }
         if(!ok){
             mSelection[0] = true;
+            mSelectionAtStart[0] = true;
         }
         simple_adapter.clear();
         simple_adapter.add(buildSelectedItems());
+        if(onChangeSelectedItem!=null) {
+            onChangeSelectedItem.onChange(simple_adapter.getItem(0));
+        }
     }
 
 
@@ -136,16 +148,13 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
         Arrays.fill(mSelection, false);
         mSelection[0] = true;
         mSelectionAtStart[0] = true;
-        if(onChangeSelectedItem!=null){
-            onChangeSelectedItem.onChange(mcm);
-        }
     }
 
     public boolean isItemsVoid(){
         return _items==null || _items.size()==0;
     }
 
-    private MultiChoiceModel buildSelectedItems() {
+    public MultiChoiceModel buildSelectedItems() {
         MultiChoiceModel mcm = new MultiChoiceModel();
         for (int i = 0; i < _items.size(); ++i) {
             if (mSelection[i]) {
@@ -163,4 +172,12 @@ class MultiChoiceSpinner extends Spinner implements DialogInterface.OnMultiChoic
     public interface OnChangeSelectedItem{
         void onChange(MultiChoiceModel multiChoiceModel);
     }
+
+    public void setStyleTextResponse(int styleTextResponse) {
+        this.styleTextResponse = styleTextResponse;
+        if(simple_adapter!=null)
+            simple_adapter.setStyleText(styleTextResponse);
+    }
+
+
 }

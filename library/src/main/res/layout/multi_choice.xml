@@ -13,7 +13,8 @@
     <it.bsdsoftware.dynamicquestion.library.MultiChoiceSpinner
         android:id="@+id/spinner_multi_choice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:spinnerMode="dialog" />
 
 </LinearLayout>
 

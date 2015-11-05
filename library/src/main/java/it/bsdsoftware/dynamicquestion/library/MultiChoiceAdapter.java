@@ -11,6 +11,8 @@ import android.widget.TextView;
  */
 class MultiChoiceAdapter extends ArrayAdapter<MultiChoiceModel> {
 
+    private int styleText = -1;
+
     public MultiChoiceAdapter(Context context) {
         super(context, R.layout.spinner_item);
     }
@@ -22,7 +24,14 @@ class MultiChoiceAdapter extends ArrayAdapter<MultiChoiceModel> {
         MultiChoiceModel mcm = getItem(position);
         TextView text = (TextView) view.findViewById(android.R.id.text1);
         text.setText(mcm.getLabelSelected());
+        if(styleText != -1){
+            Utils.setTextAppearance(getContext(), text, styleText);
+        }
 
         return view;
+    }
+
+    public void setStyleText(int styleText) {
+        this.styleText = styleText;
     }
 }

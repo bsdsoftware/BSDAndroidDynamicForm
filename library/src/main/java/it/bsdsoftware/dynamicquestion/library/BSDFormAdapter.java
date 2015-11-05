@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import java.util.List;
 import it.bsdsoftware.dynamicquestion.library.models.BSDChoiceModel;
 import it.bsdsoftware.dynamicquestion.library.models.BSDQuestionModel;
 import it.bsdsoftware.dynamicquestion.library.models.CallbackComplete;
-import it.bsdsoftware.dynamicquestion.library.models.QuestionType;
 import it.bsdsoftware.dynamicquestion.library.models.response.BSDResponse;
 import it.bsdsoftware.dynamicquestion.library.models.response.MultiChoice;
 import it.bsdsoftware.dynamicquestion.library.models.response.MultiLineText;
@@ -79,49 +79,75 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
         return VIEW_TYPE_COUNT;
     }
 
+    public View instantiateConvertView(View convertView, int itemViewType, BSDQuestionModel model, ViewGroup parent){
+        ViewHolder viewHolder;
+        int layoutID;
+        switch (itemViewType){
+            case VIEW_TYPE_SINGLE_LINE_TEXT:
+                layoutID = R.layout.single_line_text;
+                break;
+            case VIEW_TYPE_MULTI_LINE_TEXT:
+                layoutID = R.layout.multi_line_text;
+                break;
+            case VIEW_TYPE_SINGLE_CHOICE:
+                layoutID = R.layout.single_choice;
+                break;
+            case VIEW_TYPE_MULTI_CHOICE:
+                layoutID = R.layout.multi_choice;
+                break;
+            case VIEW_TYPE_END:
+            default:
+                layoutID = R.layout.bottom_button;
+        }
+        LayoutInflater inflater = context.getLayoutInflater();
+        convertView = inflater.inflate(layoutID, parent, false);
+        if(itemViewType == VIEW_TYPE_SINGLE_LINE_TEXT || itemViewType == VIEW_TYPE_MULTI_LINE_TEXT){
+            viewHolder = new ViewHolder(convertView, model.getInputType());
+        }else {
+            viewHolder = new ViewHolder(convertView);
+        }
+        if(itemViewType != VIEW_TYPE_END)
+            viewHolder.idQuestion = model.getQuestionID();
+        else
+            viewHolder.idQuestion = -1;
+
+        convertView.setTag(viewHolder);
+        return convertView;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         int itemViewType = getItemViewType(position);
         final BSDQuestionModel model = getItem(position);
 
-        ViewHolder viewHolder;
-      //  if(convertView == null) {
-            int layoutID;
-            switch (itemViewType){
-                case VIEW_TYPE_SINGLE_LINE_TEXT:
-                    layoutID = R.layout.single_line_text;
-                    break;
-                case VIEW_TYPE_MULTI_LINE_TEXT:
-                    layoutID = R.layout.multi_line_text;
-                    break;
-                case VIEW_TYPE_SINGLE_CHOICE:
-                    layoutID = R.layout.single_choice;
-                    break;
-                case VIEW_TYPE_MULTI_CHOICE:
-                    layoutID = R.layout.multi_choice;
-                    break;
-                case VIEW_TYPE_END:
-                default:
-                    layoutID = R.layout.bottom_button;
-            }
-            LayoutInflater inflater = context.getLayoutInflater();
-            convertView = inflater.inflate(layoutID, parent, false);
-            viewHolder = new ViewHolder(convertView);
-            convertView.setTag(viewHolder);
-       // }
+        ViewHolder viewHolder = null;
 
-        /*if (viewHolder == null) {
-            Object tag = convertView.getTag();
+        if(convertView == null) {
+            convertView = instantiateConvertView(convertView, itemViewType, model, parent);
+        }
+
+        Object tag = convertView.getTag();
+        if (tag instanceof ViewHolder) {
+            viewHolder = (ViewHolder) tag;
+        }
+
+        int idQuestion = -1;
+        if(model!=null)
+            idQuestion = model.getQuestionID();
+
+        if(viewHolder.idQuestion != idQuestion) {
+            convertView = instantiateConvertView(convertView, itemViewType, model, parent);
+            tag = convertView.getTag();
             if (tag instanceof ViewHolder) {
                 viewHolder = (ViewHolder) tag;
             }
-        }*/
+        }
 
         if(viewHolder.question!=null) {
             viewHolder.question.setText(model.getQuestion());
         }
 
-        switch (itemViewType){
+        switch (itemViewType) {
             case VIEW_TYPE_SINGLE_LINE_TEXT:
             case VIEW_TYPE_MULTI_LINE_TEXT:
                 if(viewHolder.textWatcher!=null)
@@ -144,12 +170,14 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
                     }
                 };
                 viewHolder.text.addTextChangedListener(viewHolder.textWatcher);
-                viewHolder.text.setInputType(model.getInputType());
                 break;
             case VIEW_TYPE_SINGLE_CHOICE:
                 BSDSpinnerAdapter adapter;
                 if(viewHolder.spinner.getAdapter()==null) {
                     adapter = new BSDSpinnerAdapter(context);
+                    if(styleTextResponse!=-1){
+                        adapter.setStyleText(styleTextResponse);
+                    }
                     adapter.addAll(model.getChoices());
                     viewHolder.spinner.setAdapter(adapter);
                     viewHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -170,14 +198,15 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
                 break;
             case VIEW_TYPE_MULTI_CHOICE:
                 if(viewHolder.multiSpinner.isItemsVoid()) {
+                    viewHolder.multiSpinner.setItems(model.getChoices());
                     viewHolder.multiSpinner.setOnChangeSelectedItem(new MultiChoiceSpinner.OnChangeSelectedItem() {
                         @Override
                         public void onChange(MultiChoiceModel multiChoiceModel) {
                             model.setResultMultiChoices(multiChoiceModel.getValues());
                         }
                     });
-                    viewHolder.multiSpinner.setItems(model.getChoices());
                 }
+                viewHolder.multiSpinner.selectItems(model.getResultMultiChoices());
                 break;
             case VIEW_TYPE_END:
                 if(viewHolder.btn_container.findViewById(R.id.save_button)==null) {
@@ -212,11 +241,10 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
                 }
                 break;
             }
-
         return convertView;
     }
 
-    private List<BSDResponse> checkResponse(){
+    private List<BSDResponse> checkResponse() {
         List<BSDResponse> response = new ArrayList<>();
         for(int i = 0; i < this.getCount(); i++){
             BSDQuestionModel model = this.getItem(i);
@@ -251,6 +279,7 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
         public final MultiChoiceSpinner multiSpinner;
         public final LinearLayout btn_container;
         public TextWatcher textWatcher;
+        public int idQuestion;
 
         public ViewHolder(View view){
             question = (TextView) view.findViewById(R.id.textview_question);
@@ -263,7 +292,15 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
             if(styleTextResponse!= -1){
                 if(text!=null)
                     Utils.setTextAppearance(context, text, styleTextResponse);
+                if(multiSpinner!=null)
+                    multiSpinner.setStyleTextResponse(styleTextResponse);
             }
+        }
+
+        public ViewHolder(View view, int inputType){
+            this(view);
+            if(text!=null)
+                text.setInputType(inputType);
         }
     }
 
