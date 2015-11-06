@@ -40,6 +40,7 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
     private CallbackComplete callbackComplete;
 
     private int styleSaveButton = -1;
+    private String saveButtonText;
     private int styleTextSaveButton = -1;
     private int styleTextQuestion = -1;
     private int styleTextResponse = -1;
@@ -228,7 +229,7 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
                         saveButton.setBackgroundColor(colorBackgroundSaveButton);
                     }
                     saveButton.setId(R.id.save_button);
-                    saveButton.setText(R.string.save_button);
+                    saveButton.setText(saveButtonText);
                     saveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -330,5 +331,9 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
 
     public void setStyleTextResponse(int styleTextResponse) {
         this.styleTextResponse = styleTextResponse;
+    }
+
+    public void setSaveButtonText(String saveButtonText) {
+        this.saveButtonText = saveButtonText;
     }
 }

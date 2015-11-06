@@ -26,6 +26,7 @@ public class BSDDynamicForm extends GridView {
     private int styleTextSaveButton = -1;
     private int styleTextQuestion = -1;
     private int styleTextResponse = -1;
+    private String saveButtonText;
     private int colorBackgroundSaveButton = Color.TRANSPARENT;
     private Drawable backgroundSaveButton = null;
     private BSDFormAdapter adapter;
@@ -59,6 +60,7 @@ public class BSDDynamicForm extends GridView {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.BSDDynamicForm);
             styleSaveButton = a.getResourceId(R.styleable.BSDDynamicForm_save_button_style, -1);
             styleTextSaveButton = a.getResourceId(R.styleable.BSDDynamicForm_save_button_text_style, -1);
+            saveButtonText = a.getString(R.styleable.BSDDynamicForm_save_button_text);
             styleTextQuestion = a.getResourceId(R.styleable.BSDDynamicForm_question_text_style, -1);
             styleTextResponse = a.getResourceId(R.styleable.BSDDynamicForm_response_text_style, -1);
             colorBackgroundSaveButton = a.getColor(R.styleable.BSDDynamicForm_save_button_backgrond_color, Color.TRANSPARENT);
@@ -72,6 +74,9 @@ public class BSDDynamicForm extends GridView {
             }
             a.recycle();
         }
+
+        if(saveButtonText == null)
+            saveButtonText = getContext().getString(R.string.save_button);
         adapter = new BSDFormAdapter(activity);
         adapter.setStyleSaveButton(styleSaveButton);
         adapter.setStyleTextSaveButton(styleTextSaveButton);
@@ -79,6 +84,7 @@ public class BSDDynamicForm extends GridView {
         adapter.setStyleTextResponse(styleTextResponse);
         adapter.setBackgroundSaveButton(backgroundSaveButton);
         adapter.setColorBackgroundSaveButton(colorBackgroundSaveButton);
+        adapter.setSaveButtonText(saveButtonText);
         super.setAdapter(adapter);
     }
 
