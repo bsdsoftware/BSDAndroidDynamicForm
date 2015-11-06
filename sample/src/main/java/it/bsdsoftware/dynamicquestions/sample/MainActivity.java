@@ -68,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
         List<BSDQuestionModel> questions = new ArrayList<>();
 
-        BSDQuestionModel model = new BSDQuestionModel("Question 1 (Single line email)", 1, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        BSDQuestionModel model = new BSDQuestionModel("Question 1 (Single line email)", 1, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS, "placeholder");
         questions.add(model);
-        model = new BSDQuestionModel("Question 2 (Single line url)", 2, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+        model = new BSDQuestionModel("Question 2 (Single line url)", 2, QuestionType.SINGLE_LINE_TEXT, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI, "http://");
         questions.add(model);
         model = new BSDQuestionModel("Question 3 (Multi line text)", 3 , QuestionType.MULTI_LINE_TEXT);
         questions.add(model);
@@ -86,13 +86,17 @@ public class MainActivity extends AppCompatActivity {
         choiceModels.add(new BSDChoiceModel("choice 6", 6));
         choiceModels.add(new BSDChoiceModel("choice 7", 7));
 
-        model = new BSDQuestionModel("Question 5 (Single choice)", 5, QuestionType.SINGLE_CHOICE, choiceModels);
+        List<Integer> defaultM = new ArrayList<>();
+        defaultM.add(1);
+        defaultM.add(2);
+
+        model = new BSDQuestionModel("Question 5 (Single choice)", 5, QuestionType.SINGLE_CHOICE, choiceModels, 2);
         questions.add(model);
         model = new BSDQuestionModel("Question 6 (Single choice)", 6, QuestionType.SINGLE_CHOICE, choiceModels);
         questions.add(model);
         model = new BSDQuestionModel("Question 7 (Multi choice)", 7, QuestionType.MULTI_CHOICE, choiceModels);
         questions.add(model);
-        model = new BSDQuestionModel("Question 8 (Multi choice)", 8, QuestionType.MULTI_CHOICE, choiceModels);
+        model = new BSDQuestionModel("Question 8 (Multi choice)", 8, QuestionType.MULTI_CHOICE, choiceModels, defaultM);
         questions.add(model);
         model = new BSDQuestionModel("Question 9 (Multi choice)", 9, QuestionType.MULTI_CHOICE, choiceModels);
         questions.add(model);

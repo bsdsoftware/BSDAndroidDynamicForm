@@ -113,4 +113,60 @@ public class BSDDynamicForm extends GridView {
     public void setAdapter(ListAdapter adapter) {
         throw new RuntimeException("setAdapter is not supported by BSDDynamicForm.");
     }
+
+    public int getStyleSaveButton() {
+        return styleSaveButton;
+    }
+
+    public void setStyleSaveButton(int styleSaveButton) {
+        this.styleSaveButton = styleSaveButton;
+    }
+
+    public int getStyleTextSaveButton() {
+        return styleTextSaveButton;
+    }
+
+    public void setStyleTextSaveButton(int styleTextSaveButton) {
+        this.styleTextSaveButton = styleTextSaveButton;
+    }
+
+    public int getStyleTextQuestion() {
+        return styleTextQuestion;
+    }
+
+    public void setStyleTextQuestion(int styleTextQuestion) {
+        this.styleTextQuestion = styleTextQuestion;
+    }
+
+    public int getStyleTextResponse() {
+        return styleTextResponse;
+    }
+
+    public void setStyleTextResponse(int styleTextResponse) {
+        this.styleTextResponse = styleTextResponse;
+    }
+
+    public String getSaveButtonText() {
+        return saveButtonText;
+    }
+
+    public void setSaveButtonText(String saveButtonText) {
+        this.saveButtonText = saveButtonText;
+    }
+
+    public int getColorBackgroundSaveButton() {
+        return colorBackgroundSaveButton;
+    }
+
+    public void setColorBackgroundSaveButton(int colorBackgroundSaveButton) {
+        this.colorBackgroundSaveButton = colorBackgroundSaveButton;
+    }
+
+    public Drawable getBackgroundSaveButton() {
+        return backgroundSaveButton;
+    }
+
+    public void setBackgroundSaveButton(Drawable backgroundSaveButton) {
+        this.backgroundSaveButton = backgroundSaveButton;
+    }
 }
