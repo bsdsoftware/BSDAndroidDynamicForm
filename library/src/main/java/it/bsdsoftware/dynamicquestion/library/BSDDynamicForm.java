@@ -1,12 +1,15 @@
 package it.bsdsoftware.dynamicquestion.library;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import java.util.ArrayList;
@@ -44,7 +47,14 @@ public class BSDDynamicForm extends GridView {
     }
 
     private void afterCreate(AttributeSet attrs){
-        Activity activity = (Activity) getContext();
+        Activity activity;
+        if(getContext() instanceof Activity) {
+            activity = (Activity) getContext();
+        }else{
+            ContextThemeWrapper ctw = (ContextThemeWrapper) getContext();
+            activity = (Activity) ctw.getBaseContext();
+        }
+
         if(attrs!=null) {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.BSDDynamicForm);
             styleSaveButton = a.getResourceId(R.styleable.BSDDynamicForm_save_button_style, -1);

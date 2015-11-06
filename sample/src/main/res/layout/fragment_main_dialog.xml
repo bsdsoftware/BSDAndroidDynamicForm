@@ -1,21 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:text="Dialog"
-        android:id="@+id/btn_dialog"
-        android:layout_height="wrap_content" />
+    tools:context="it.bsdsoftware.dynamicquestions.sample.MainDialogFragment">
 
     <it.bsdsoftware.dynamicquestion.library.BSDDynamicForm
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/gridView"
-        android:layout_below="@id/btn_dialog"
+        android:id="@+id/dialog_grid"
         app:save_button_style="@style/ButtonSaveStyle"
         app:save_button_text_style="@style/ButtonSaveText"
         app:save_button_backgrond_color="#4CAF50"
@@ -23,4 +16,4 @@
         app:response_text_style="@style/ResponseText"
         android:numColumns="1"/>
 
-</RelativeLayout>
+</FrameLayout>
