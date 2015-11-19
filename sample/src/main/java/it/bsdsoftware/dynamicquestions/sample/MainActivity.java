@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import it.bsdsoftware.dynamicquestion.library.BSDDynamicForm;
 import it.bsdsoftware.dynamicquestion.library.models.BSDChoiceModel;
 import it.bsdsoftware.dynamicquestion.library.models.BSDQuestionModel;
 import it.bsdsoftware.dynamicquestion.library.models.CallbackComplete;
+import it.bsdsoftware.dynamicquestion.library.models.CancelCallback;
 import it.bsdsoftware.dynamicquestion.library.models.QuestionType;
 import it.bsdsoftware.dynamicquestion.library.models.response.BSDResponse;
 import it.bsdsoftware.dynamicquestion.library.models.response.MultiChoice;
@@ -63,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
                         .setMessage(result)
                         .setNegativeButton("Close", null)
                         .show();
+            }
+        });
+        bsdDynamicForm.setCancelCallback(new CancelCallback() {
+            @Override
+            public void onCancel() {
+                Toast.makeText(MainActivity.this, "cancel", Toast.LENGTH_LONG).show();
             }
         });
 

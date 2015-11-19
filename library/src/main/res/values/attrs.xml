@@ -6,9 +6,11 @@
         <attr name="save_button_text_style" format="reference" />
         <attr name="save_button_backgrond_color" format="color" />
         <attr name="save_button_text" format="string" />
+        <attr name="cancel_button_text" format="string" />
         <attr name="save_button_background_resource" format="reference" />
         <attr name="question_text_style" format="reference" />
         <attr name="response_text_style" format="reference" />
+        <attr name="text_is_placeholder" format="boolean" />
     </declare-styleable>
 
 </resources>

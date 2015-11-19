@@ -17,6 +17,7 @@ import java.util.List;
 import it.bsdsoftware.dynamicquestion.library.models.BSDChoiceModel;
 import it.bsdsoftware.dynamicquestion.library.models.BSDQuestionModel;
 import it.bsdsoftware.dynamicquestion.library.models.CallbackComplete;
+import it.bsdsoftware.dynamicquestion.library.models.CancelCallback;
 import it.bsdsoftware.dynamicquestion.library.models.response.BSDResponse;
 import it.bsdsoftware.dynamicquestion.library.models.response.MultiChoice;
 import it.bsdsoftware.dynamicquestion.library.models.response.MultiLineText;
@@ -38,9 +39,11 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
 
     private Activity context;
     private CallbackComplete callbackComplete;
+    private CancelCallback cancelCallback;
 
+    private boolean textIsPlaceholder = false;
     private int styleSaveButton = -1;
-    private String saveButtonText;
+    private String saveButtonText, cancelButtonText;
     private int styleTextSaveButton = -1;
     private int styleTextQuestion = -1;
     private int styleTextResponse = -1;
@@ -171,6 +174,10 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
                     }
                 };
                 viewHolder.text.addTextChangedListener(viewHolder.textWatcher);
+                if(textIsPlaceholder){
+                    viewHolder.text.setHint(model.getQuestion());
+                    viewHolder.question.setText("");
+                }
                 break;
             case VIEW_TYPE_SINGLE_CHOICE:
                 BSDSpinnerAdapter adapter;
@@ -212,21 +219,29 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
             case VIEW_TYPE_END:
                 if(viewHolder.btn_container.findViewById(R.id.save_button)==null) {
                     Button saveButton;
+                    Button cancelButton;
                     if(styleSaveButton !=-1){
                         saveButton = new Button(new ContextThemeWrapper(context, styleSaveButton));
+                        cancelButton = new Button(new ContextThemeWrapper(context, styleSaveButton));
                     }else{
                         saveButton = new Button(context);
+                        cancelButton = new Button(context);
                     }
                     if(styleTextSaveButton != -1){
                         Utils.setTextAppearance(context, saveButton, styleTextSaveButton);
+                        Utils.setTextAppearance(context, cancelButton, styleTextSaveButton);
                     }
                     if(backgroundSaveButton!=null){
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             saveButton.setBackground(backgroundSaveButton);
-                        else
+                            cancelButton.setBackground(backgroundSaveButton);
+                        }else {
                             saveButton.setBackgroundDrawable(backgroundSaveButton);
+                            cancelButton.setBackgroundDrawable(backgroundSaveButton);
+                        }
                     }else{
                         saveButton.setBackgroundColor(colorBackgroundSaveButton);
+                        cancelButton.setBackgroundColor(colorBackgroundSaveButton);
                     }
                     saveButton.setId(R.id.save_button);
                     saveButton.setText(saveButtonText);
@@ -238,6 +253,16 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
                                 callbackComplete.doOnComplete(response);
                         }
                     });
+                    cancelButton.setId(R.id.cancel_button);
+                    cancelButton.setText(cancelButtonText);
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(cancelCallback!=null)
+                                cancelCallback.onCancel();
+                        }
+                    });
+                    viewHolder.btn_container.addView(cancelButton);
                     viewHolder.btn_container.addView(saveButton);
                 }
                 break;
@@ -335,5 +360,17 @@ class BSDFormAdapter extends ArrayAdapter<BSDQuestionModel> {
 
     public void setSaveButtonText(String saveButtonText) {
         this.saveButtonText = saveButtonText;
+    }
+
+    public void setCancelCallback(CancelCallback cancelCallback) {
+        this.cancelCallback = cancelCallback;
+    }
+
+    public void setCancelButtonText(String cancelButtonText) {
+        this.cancelButtonText = cancelButtonText;
+    }
+
+    public void setTextIsPlaceholder(boolean textIsPlaceholder) {
+        this.textIsPlaceholder = textIsPlaceholder;
     }
 }

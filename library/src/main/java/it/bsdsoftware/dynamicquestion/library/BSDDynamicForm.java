@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import it.bsdsoftware.dynamicquestion.library.models.BSDQuestionModel;
 import it.bsdsoftware.dynamicquestion.library.models.CallbackComplete;
+import it.bsdsoftware.dynamicquestion.library.models.CancelCallback;
 
 /**
  * Created by Simone on 03/11/15.
@@ -26,10 +27,11 @@ public class BSDDynamicForm extends GridView {
     private int styleTextSaveButton = -1;
     private int styleTextQuestion = -1;
     private int styleTextResponse = -1;
-    private String saveButtonText;
+    private String saveButtonText, cancelButtonText;
     private int colorBackgroundSaveButton = Color.TRANSPARENT;
     private Drawable backgroundSaveButton = null;
     private BSDFormAdapter adapter;
+    private boolean textIsPlaceholder = false;
     private List<BSDQuestionModel> questions = new ArrayList<>();
 
     public BSDDynamicForm(Context context) {
@@ -61,6 +63,8 @@ public class BSDDynamicForm extends GridView {
             styleSaveButton = a.getResourceId(R.styleable.BSDDynamicForm_save_button_style, -1);
             styleTextSaveButton = a.getResourceId(R.styleable.BSDDynamicForm_save_button_text_style, -1);
             saveButtonText = a.getString(R.styleable.BSDDynamicForm_save_button_text);
+            cancelButtonText = a.getString(R.styleable.BSDDynamicForm_cancel_button_text);
+            textIsPlaceholder = a.getBoolean(R.styleable.BSDDynamicForm_text_is_placeholder, false);
             styleTextQuestion = a.getResourceId(R.styleable.BSDDynamicForm_question_text_style, -1);
             styleTextResponse = a.getResourceId(R.styleable.BSDDynamicForm_response_text_style, -1);
             colorBackgroundSaveButton = a.getColor(R.styleable.BSDDynamicForm_save_button_backgrond_color, Color.TRANSPARENT);
@@ -85,6 +89,8 @@ public class BSDDynamicForm extends GridView {
         adapter.setBackgroundSaveButton(backgroundSaveButton);
         adapter.setColorBackgroundSaveButton(colorBackgroundSaveButton);
         adapter.setSaveButtonText(saveButtonText);
+        adapter.setCancelButtonText(cancelButtonText);
+        adapter.setTextIsPlaceholder(textIsPlaceholder);
         super.setAdapter(adapter);
     }
 
@@ -107,6 +113,10 @@ public class BSDDynamicForm extends GridView {
     public void clearQuestions(){
         questions = new ArrayList<>();
         setQuestions(questions);
+    }
+
+    public void setCancelCallback(CancelCallback cancelCallback){
+        adapter.setCancelCallback(cancelCallback);
     }
 
     @Override
@@ -168,5 +178,21 @@ public class BSDDynamicForm extends GridView {
 
     public void setBackgroundSaveButton(Drawable backgroundSaveButton) {
         this.backgroundSaveButton = backgroundSaveButton;
+    }
+
+    public void setCancelButtonText(String cancelButtonText) {
+        this.cancelButtonText = cancelButtonText;
+    }
+
+    public String getCancelButtonText() {
+        return cancelButtonText;
+    }
+
+    public boolean isTextIsPlaceholder() {
+        return textIsPlaceholder;
+    }
+
+    public void setTextIsPlaceholder(boolean textIsPlaceholder) {
+        this.textIsPlaceholder = textIsPlaceholder;
     }
 }

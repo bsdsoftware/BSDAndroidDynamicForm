@@ -21,6 +21,9 @@
         app:save_button_backgrond_color="#4CAF50"
         app:question_text_style="@style/QuestionText"
         app:response_text_style="@style/ResponseText"
+        app:cancel_button_text="Cancella"
+        app:save_button_text="Salva"
+        app:text_is_placeholder="true"
         android:numColumns="1"/>
 
 </RelativeLayout>
