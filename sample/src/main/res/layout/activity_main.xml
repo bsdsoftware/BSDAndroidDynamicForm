@@ -11,19 +11,24 @@
         android:id="@+id/btn_dialog"
         android:layout_height="wrap_content" />
 
-    <it.bsdsoftware.dynamicquestion.library.BSDDynamicForm
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/gridView"
-        android:layout_below="@id/btn_dialog"
-        app:save_button_style="@style/ButtonSaveStyle"
-        app:save_button_text_style="@style/ButtonSaveText"
-        app:save_button_backgrond_color="#4CAF50"
-        app:question_text_style="@style/QuestionText"
-        app:response_text_style="@style/ResponseText"
-        app:cancel_button_text="Cancella"
-        app:save_button_text="Salva"
-        app:text_is_placeholder="true"
-        android:numColumns="1"/>
+        android:layout_below="@+id/btn_dialog">
+        <it.bsdsoftware.dynamicquestion.library.BSDDynamicForm
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/gridView"
+            android:layout_below="@id/btn_dialog"
+            app:save_button_style="@style/ButtonSaveStyle"
+            app:save_button_text_style="@style/ButtonSaveText"
+            app:save_button_backgrond_color="#4CAF50"
+            app:question_text_style="@style/QuestionText"
+            app:response_text_style="@style/ResponseText"
+            app:cancel_button_text="Cancella"
+            app:save_button_text="Salva"
+            app:text_is_placeholder="true"
+            android:numColumns="1"/>
+    </ScrollView>
 
 </RelativeLayout>

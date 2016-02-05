@@ -11,17 +11,23 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import it.bsdsoftware.dynamicquestion.library.models.BSDQuestionModel;
 import it.bsdsoftware.dynamicquestion.library.models.CallbackComplete;
 import it.bsdsoftware.dynamicquestion.library.models.CancelCallback;
+import it.bsdsoftware.dynamicquestion.library.models.response.BSDResponse;
+import it.bsdsoftware.dynamicquestion.library.models.response.MultiChoice;
+import it.bsdsoftware.dynamicquestion.library.models.response.MultiLineText;
+import it.bsdsoftware.dynamicquestion.library.models.response.SingleChoice;
+import it.bsdsoftware.dynamicquestion.library.models.response.SingleLineText;
 
 /**
  * Created by Simone on 03/11/15.
  */
-public class BSDDynamicForm extends GridView {
+public class BSDDynamicForm extends LinearLayout {
 
     private int styleSaveButton = -1;
     private int styleTextSaveButton = -1;
@@ -30,9 +36,12 @@ public class BSDDynamicForm extends GridView {
     private String saveButtonText, cancelButtonText;
     private int colorBackgroundSaveButton = Color.TRANSPARENT;
     private Drawable backgroundSaveButton = null;
-    private BSDFormAdapter adapter;
+    //private BSDFormAdapter adapter;
     private boolean textIsPlaceholder = false;
     private List<BSDQuestionModel> questions = new ArrayList<>();
+    private List<BSDFormItem> items = new ArrayList<>();
+    private CallbackComplete callbackComplete;
+    private CancelCallback cancelCallback;
 
     public BSDDynamicForm(Context context) {
         super(context);
@@ -50,6 +59,7 @@ public class BSDDynamicForm extends GridView {
     }
 
     private void afterCreate(AttributeSet attrs){
+        this.setOrientation(VERTICAL);
         Activity activity;
         if(getContext() instanceof Activity) {
             activity = (Activity) getContext();
@@ -81,7 +91,7 @@ public class BSDDynamicForm extends GridView {
 
         if(saveButtonText == null)
             saveButtonText = getContext().getString(R.string.save_button);
-        adapter = new BSDFormAdapter(activity);
+        /*adapter = new BSDFormAdapter(activity);
         adapter.setStyleSaveButton(styleSaveButton);
         adapter.setStyleTextSaveButton(styleTextSaveButton);
         adapter.setStyleTextQuestion(styleTextQuestion);
@@ -91,18 +101,81 @@ public class BSDDynamicForm extends GridView {
         adapter.setSaveButtonText(saveButtonText);
         adapter.setCancelButtonText(cancelButtonText);
         adapter.setTextIsPlaceholder(textIsPlaceholder);
-        super.setAdapter(adapter);
+        super.setAdapter(adapter);*/
     }
 
     public void setQuestions(List<BSDQuestionModel> questions){
-        adapter.clear();
+        this.removeAllViews();
+        Activity activity;
+        if(getContext() instanceof Activity) {
+            activity = (Activity) getContext();
+        }else{
+            ContextThemeWrapper ctw = (ContextThemeWrapper) getContext();
+            activity = (Activity) ctw.getBaseContext();
+        }
+        questions.add(null);
+        for(BSDQuestionModel model : questions){
+            BSDFormItem item = new BSDFormItem(activity);
+            item.setStyleSaveButton(styleSaveButton);
+            item.setStyleTextSaveButton(styleTextSaveButton);
+            item.setStyleTextQuestion(styleTextQuestion);
+            item.setStyleTextResponse(styleTextResponse);
+            item.setBackgroundSaveButton(backgroundSaveButton);
+            item.setColorBackgroundSaveButton(colorBackgroundSaveButton);
+            item.setSaveButtonText(saveButtonText);
+            item.setCancelButtonText(cancelButtonText);
+            item.setTextIsPlaceholder(textIsPlaceholder);
+            item.setCancelCallback(cancelCallback);
+            item.setCallbackComplete(new BSDFormItem.Callback() {
+                @Override
+                public void call() {
+                    List<BSDResponse> res = checkResponse();
+                    callbackComplete.doOnComplete(res);
+                }
+            });
+            item.setQuestionModel(model);
+            item.init();
+            this.addView(item);
+            this.items.add(item);
+        }
+
+        /*adapter.clear();
         adapter.addAll(questions);
-        adapter.add(null);
-        adapter.notifyDataSetChanged();
+        adapter.add(null);//barra bottoni
+        adapter.notifyDataSetChanged();*/
+    }
+
+    private List<BSDResponse> checkResponse() {
+        List<BSDResponse> response = new ArrayList<>();
+        for(int i = 0; i < this.items.size(); i++){
+            BSDQuestionModel model = this.items.get(i).getQuestionModel();
+            if(model!=null){
+                switch (model.getType()) {
+                    case SINGLE_LINE_TEXT:
+                        SingleLineText singleLineText = new SingleLineText(model.getQuestionID(), model.getQuestion(), model.getResultText());
+                        response.add(singleLineText);
+                        break;
+                    case MULTI_LINE_TEXT:
+                        MultiLineText multiLineText = new MultiLineText(model.getQuestionID(), model.getQuestion(), model.getResultText());
+                        response.add(multiLineText);
+                        break;
+                    case SINGLE_CHOICE:
+                        SingleChoice singleChoice = new SingleChoice(model.getQuestionID(), model.getQuestion(), model.getResultChoice());
+                        response.add(singleChoice);
+                        break;
+                    case MULTI_CHOICE:
+                        MultiChoice multiChoice = new MultiChoice(model.getQuestionID(), model.getQuestion(), model.getResultMultiChoices());
+                        response.add(multiChoice);
+                        break;
+                }
+            }
+        }
+        return response;
     }
 
     public void setCallbackComplete(CallbackComplete callbackComplete){
-        adapter.setCallbackComplete(callbackComplete);
+        //adapter.setCallbackComplete(callbackComplete);
+        this.callbackComplete = callbackComplete;
     }
 
     public void addQuestion(BSDQuestionModel question){
@@ -115,14 +188,16 @@ public class BSDDynamicForm extends GridView {
         setQuestions(questions);
     }
 
+
     public void setCancelCallback(CancelCallback cancelCallback){
-        adapter.setCancelCallback(cancelCallback);
+        //adapter.setCancelCallback(cancelCallback);
+        this.cancelCallback = cancelCallback;
     }
 
-    @Override
+ /*   @Override
     public void setAdapter(ListAdapter adapter) {
         throw new RuntimeException("setAdapter is not supported by BSDDynamicForm.");
-    }
+    }*/
 
     public int getStyleSaveButton() {
         return styleSaveButton;
